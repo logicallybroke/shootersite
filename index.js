@@ -126,7 +126,7 @@ function animate() {
     projectiles.forEach((projectile) => {
         projectile.update();
 
-        if(projectile.x + projectile.radius < 0 ||
+        if (projectile.x + projectile.radius < 0 ||
             projectile.x - projectile.radius > canvas.width ||
             projectile.y + projectile.radius < 0 ||
             projectile.y - projectile.radius > canvas.height) {
@@ -135,44 +135,55 @@ function animate() {
             }, 0)
         }
     })
-    enemies.forEach((enemy,index) => { 
+    enemies.forEach((enemy, index) => {
         enemy.update();
         const dist = Math.hypot(player.x - enemy.x,
-            player.y - enemy.y) 
+            player.y - enemy.y)
+        //end the game
         if (dist - enemy.radius - player.radius < 1) {
             cancelAnimationFrame(animateId);
         }
-        
+
         projectiles.forEach((projectile, projectileIndex) => {
             const dist = Math.hypot(projectile.x - enemy.x,
-                projectile.y - enemy.y) 
+                projectile.y - enemy.y)
+            // when projectiles touch the enemy
             if (dist - enemy.radius - projectile.radius < 1) {
-                setTimeout(() => {
-                    enemies.splice(index, 1);
-                    projectiles.splice(projectileIndex, 1);
-                }, 0)
+                if (enemy.radius - 10 > 5) {
+                    gsap.to(enemy, {
+                        radius: enemy.radius - 10
+                    })
+                    setTimeout(() => {
+                        projectiles.splice(projectileIndex, 1);
+                    }, 0)
+                } else {
+                    setTimeout(() => {
+                        enemies.splice(index, 1);
+                        projectiles.splice(projectileIndex, 1);
+                    }, 0)
+                }
             }
         })
     })
 }
 
-    addEventListener('click', (event) => {
-        const angle = Math.atan2(
-            event.clientY - canvas.height / 2,
-            event.clientX - canvas.width / 2
-        )
-        const velocity = {
-            x: Math.cos(angle)*5,
-            y: Math.sin(angle)*5
-        }
-        projectiles.push(new Projectile(
-            canvas.width / 2,
-            canvas.height / 2,
-            5,
-            'white',
-            velocity
-        ))
-    })
+addEventListener('click', (event) => {
+    const angle = Math.atan2(
+        event.clientY - canvas.height / 2,
+        event.clientX - canvas.width / 2
+    )
+    const velocity = {
+        x: Math.cos(angle) * 5,
+        y: Math.sin(angle) * 5
+    }
+    projectiles.push(new Projectile(
+        canvas.width / 2,
+        canvas.height / 2,
+        5,
+        'white',
+        velocity
+    ))
+})
 
-    animate();
-    spawnEnemies();
+animate();
+spawnEnemies();
