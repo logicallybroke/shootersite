@@ -4,6 +4,8 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const scoreEl = document.querySelector('#scoreEl'); 
+const startGameBtn = document.querySelector('#startGameBtn');
+const modalEl = document.getElementById('modalEl');
 class Player {
     constructor(x, y, radius, color) {
         this.x = x;
@@ -232,5 +234,11 @@ addEventListener('click', (event) => {
     ))
 })
 
-animate();
-spawnEnemies();
+startGameBtn.addEventListener('click', () => {
+    animate();
+    spawnEnemies();
+    modalEl.style.display = 'none';
+    // startGameBtn.style.display = 'none';
+    // scoreEl.innerHTML = score;
+})
+
